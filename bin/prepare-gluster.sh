@@ -1,8 +1,8 @@
 #!/bin/bash
 
-[ "$DEBUG" == "1" ] && set -x
+set -e
 
-set -ex
+[ "$DEBUG" == "1" ] && set -x
 
 if [ "${GLUSTER_PEER}" == "**ChangeMe**" ]; then
    # This node is not connecting to the cluster yet
