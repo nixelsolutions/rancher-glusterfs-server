@@ -13,9 +13,7 @@ RUN mkdir -p /var/log/supervisor
 ENV GLUSTER_VOL ranchervol
 ENV GLUSTER_REPLICA 2
 ENV GLUSTER_BRICK_PATH /gluster_volume
-ENV GLUSTER_PEER_IP **ChangeMe**
-ENV GLUSTER_PEER_PASSWORD **ChangeMe**
-ENV PASSWORD **ChangeMe**
+ENV GLUSTER_PEER **ChangeMe**
 ENV DEBUG 0
 
 VOLUME ["/gluster_volume"]
