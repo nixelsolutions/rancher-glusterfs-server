@@ -12,6 +12,11 @@ fi
 echo "=> Waiting for glusterd to start..."
 sleep 10
 
+if gluster peer status | grep ${GLUSTER_PEER} >/dev/null; then
+   echo "=> This peer is already part of Gluster Cluster, nothing to do..."
+   exit 0
+fi
+
 echo "=> Probing peer ${GLUSTER_PEER}..."
 gluster peer probe ${GLUSTER_PEER}
 
