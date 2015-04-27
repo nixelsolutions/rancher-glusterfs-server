@@ -21,7 +21,7 @@ echo "=> Probing peer ${GLUSTER_PEER}..."
 gluster peer probe ${GLUSTER_PEER}
 
 echo "=> Creating GlusterFS volume ${GLUSTER_VOL}..."
-my_rancher_ip=`ip addr show dev eth0 | grep inet | grep 10.42 | awk '{print $2}' | xargs -i ipcalc -n {} | grep Address | awk '{print $2}'`
+my_rancher_ip=`echo ${RANCHER_IP} | awk -F\/ '{print $1}'`
 gluster volume create ${GLUSTER_VOL} replica ${GLUSTER_REPLICA} ${my_rancher_ip}:${GLUSTER_BRICK_PATH} ${GLUSTER_PEER}:${GLUSTER_BRICK_PATH} force
 
 echo "=> Starting GlusterFS volume ${GLUSTER_VOL}..."

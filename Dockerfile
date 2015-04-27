@@ -6,7 +6,7 @@ RUN apt-get update && \
     apt-get install -y python-software-properties software-properties-common
 RUN add-apt-repository -y ppa:gluster/glusterfs-3.5 && \
     apt-get update && \
-    apt-get install -y ipcalc glusterfs-server supervisor
+    apt-get install -y glusterfs-server supervisor
 
 RUN mkdir -p /var/log/supervisor
 
