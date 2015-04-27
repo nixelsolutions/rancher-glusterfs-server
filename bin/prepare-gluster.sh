@@ -18,6 +18,7 @@ if gluster peer status | grep ${GLUSTER_PEER} >/dev/null; then
 fi
 
 echo "=> Probing peer ${GLUSTER_PEER}..."
+ping -c 10 ${GLUSTER_PEER} >/dev/null 2>&1
 gluster peer probe ${GLUSTER_PEER}
 
 echo "=> Creating GlusterFS volume ${GLUSTER_VOL}..."
