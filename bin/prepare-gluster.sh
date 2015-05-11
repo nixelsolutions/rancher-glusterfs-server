@@ -13,16 +13,27 @@ echo "=> Waiting for glusterd to start..."
 sleep 10
 
 if gluster peer status | grep ${GLUSTER_PEER} >/dev/null; then
-   echo "=> This peer is already part of Gluster Cluster, nothing to do..."
-   exit 0
+   echo "=> This peer is already joined with node ${GLUSTER_PEER}, skipping..."
+else
+   echo "=> Probing peer ${GLUSTER_PEER}..."
+   gluster peer probe ${GLUSTER_PEER}
 fi
 
-echo "=> Probing peer ${GLUSTER_PEER}..."
-gluster peer probe ${GLUSTER_PEER}
+sleep 2
 
-echo "=> Creating GlusterFS volume ${GLUSTER_VOL}..."
-my_rancher_ip=`echo ${RANCHER_IP} | awk -F\/ '{print $1}'`
-gluster volume create ${GLUSTER_VOL} replica ${GLUSTER_REPLICA} ${my_rancher_ip}:${GLUSTER_BRICK_PATH} ${GLUSTER_PEER}:${GLUSTER_BRICK_PATH} force
+if gluster volume list | grep "^${GLUSTER_VOL}$" >/dev/null; then
+   echo "=> The volume ${GLUSTER_VOL} is already created, skipping..."
+else
+   echo "=> Creating GlusterFS volume ${GLUSTER_VOL}..."
+   my_rancher_ip=`echo ${RANCHER_IP} | awk -F\/ '{print $1}'`
+   gluster volume create ${GLUSTER_VOL} replica ${GLUSTER_REPLICA} ${my_rancher_ip}:${GLUSTER_BRICK_PATH} ${GLUSTER_PEER}:${GLUSTER_BRICK_PATH} force
+fi
 
-echo "=> Starting GlusterFS volume ${GLUSTER_VOL}..."
-gluster volume start ${GLUSTER_VOL}
+sleep 1
+
+if gluster volume status ${GLUSTER_VOL} >/dev/null; then
+   echo "=> The volume ${GLUSTER_VOL} is already started, skipping..."
+else
+   echo "=> Starting GlusterFS volume ${GLUSTER_VOL}..."
+   gluster volume start ${GLUSTER_VOL}
+fi
