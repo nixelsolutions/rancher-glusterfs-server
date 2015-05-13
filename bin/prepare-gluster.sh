@@ -25,7 +25,7 @@ if gluster volume list | grep "^${GLUSTER_VOL}$" >/dev/null; then
    echo "=> The volume ${GLUSTER_VOL} is already created, skipping..."
 else
    echo "=> Creating GlusterFS volume ${GLUSTER_VOL}..."
-   my_rancher_ip=`echo ${RANCHER_IP} | awk -F\/ '{print $1}'`
+   my_rancher_ip=`ip addr | grep inet | grep 10.42 | tail -1 | awk '{print $2}' | awk -F\/ '{print $1}'`
    gluster volume create ${GLUSTER_VOL} replica ${GLUSTER_REPLICA} ${my_rancher_ip}:${GLUSTER_BRICK_PATH} ${GLUSTER_PEER}:${GLUSTER_BRICK_PATH} force
 fi
 
