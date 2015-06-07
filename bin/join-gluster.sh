@@ -23,7 +23,7 @@ for PEER in ${GLUSTER_PEERS}; do
       continue
    fi
    echo "=> Checking if I can reach gluster container ${PEER} ..."
-   if ssh ${SSH_OPTS} ${SSH_USER}@${PEER} "hostname" >/dev/null 2>&1; then
+   if sshpass -p ${ROOT_PASSWORD} ssh ${SSH_OPTS} ${SSH_USER}@${PEER} "hostname" >/dev/null 2>&1; then
       echo "=> Gluster container ${PEER} is alive"
       ALIVE=1
       break
@@ -38,7 +38,7 @@ if [ ${ALIVE} -eq 0 ]; then
 fi
 
 echo "=> Joining cluster with container ${PEER} ..."
-ssh ${SSH_OPTS} ${SSH_USER}@${PEER} "add-gluster-peer.sh ${MY_RANCHER_IP}"
+sshpass -p ${ROOT_PASSWORD} ssh ${SSH_OPTS} ${SSH_USER}@${PEER} "add-gluster-peer.sh ${MY_RANCHER_IP}"
 if [ $? -eq 0 ]; then
    echo "=> Successfully joined cluster with container ${PEER} ..."
 else
