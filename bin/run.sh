@@ -1,13 +1,16 @@
 #!/bin/bash
 
-[ "$DEBUG" == "1" ] && set -x
+set -e 
 
-if [ "${ROOT_PASSWORD}" == "**ChangeMe**" ] || [ -z ${ROOT_PASSWORD} ]; then
+[ "$DEBUG" == "1" ] && set -x && set +e
+
+if [ "${ROOT_PASSWORD}" == "**ChangeMe**" ] || [ -z "${ROOT_PASSWORD}" ]; then
    echo "*** ERROR: you need to define ROOT_PASSWORD environment variable - Exiting ..."
    exit 1
 fi
 
 # Required variables to work
+sleep 2
 GLUSTER_PEERS=`dig +short $SERVICE_NAME`
 MY_RANCHER_IP=`ip addr | grep inet | grep 10.42 | tail -1 | awk '{print $2}' | awk -F\/ '{print $1}'`
 
