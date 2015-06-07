@@ -8,7 +8,7 @@ echo "=> Waiting for glusterd to start..."
 sleep 10
 
 # Check if I'm part of the cluster
-NUMBER_OF_PEERS=`gluster peer status | awk '{print $4}'`
+NUMBER_OF_PEERS=`gluster peer status | grep "Number of Peers:" | awk -F: '{print $2}'`
 if [ ${NUMBER_OF_PEERS} -ne 0 ]; then
    # This container is already part of the cluster
    echo "=> This container is already joined with nodes ${GLUSTER_PEERS}, skipping joining ..."
