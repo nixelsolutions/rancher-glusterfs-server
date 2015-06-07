@@ -7,7 +7,8 @@ set -e
 
 [ "$DEBUG" == "1" ] && set -x && set +e
 
-source ${GLUSTER_CFG_FILE}
+source /etc/gluster.env
+
 PEER=$1
 
 function echo() {

@@ -15,7 +15,6 @@ ENV GLUSTER_VOL ranchervol
 ENV GLUSTER_BRICK_PATH /gluster_volume
 ENV ROOT_PASSWORD **ChangeMe**
 ENV SERVICE_NAME **ChangeMe**
-ENV GLUSTER_CFG_FILE /etc/gluster.env
 
 ENV DEBUG 0
 
