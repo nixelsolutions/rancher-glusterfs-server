@@ -14,10 +14,11 @@ if [ "${SERVICE_NAME}" == "**ChangeMe**" -o -z "${SERVICE_NAME}" ]; then
    exit 1
 fi
 
-# Required variables to work
+# Required stuff to work
 sleep 5
 export GLUSTER_PEERS=`dig +short $SERVICE_NAME`
 export MY_RANCHER_IP=`ip addr | grep inet | grep 10.42 | tail -1 | awk '{print $2}' | awk -F\/ '{print $1}'`
+echo "root:${ROOT_PASSWORD}" | chpasswd
 
 # Prepare a shell to initialize docker environment variables for ssh
 echo "#!/bin/bash" > ${GLUSTER_CFG_FILE}
