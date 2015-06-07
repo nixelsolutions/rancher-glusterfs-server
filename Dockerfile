@@ -6,7 +6,7 @@ RUN apt-get update && \
     apt-get install -y python-software-properties software-properties-common
 RUN add-apt-repository -y ppa:gluster/glusterfs-3.5 && \
     apt-get update && \
-    apt-get install -y glusterfs-server supervisor openssh-server dnsutils
+    apt-get install -y glusterfs-server supervisor openssh-server dnsutils sshpass
 
 ENV SSH_PORT 2222
 ENV SSH_USER root
@@ -14,7 +14,7 @@ ENV SSH_OPTS -p ${SSH_PORT} -o ConnectTimeout=20 -o UserKnownHostsFile=/dev/null
 ENV GLUSTER_VOL ranchervol
 ENV GLUSTER_BRICK_PATH /gluster_volume
 ENV ROOT_PASSWORD **ChangeMe**
-ENV SERVICE_NAME gluster
+ENV SERVICE_NAME **ChangeMe**
 ENV GLUSTER_CFG_FILE /etc/gluster.env
 
 ENV DEBUG 0

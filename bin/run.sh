@@ -4,8 +4,13 @@ set -e
 
 [ "$DEBUG" == "1" ] && set -x && set +e
 
-if [ "${ROOT_PASSWORD}" == "**ChangeMe**" ] || [ "${ROOT_PASSWORD}a" == "a" ]; then
+if [ "${ROOT_PASSWORD}" == "**ChangeMe**" -o -z "${ROOT_PASSWORD}" ]; then
    echo "*** ERROR: you need to define ROOT_PASSWORD environment variable - Exiting ..."
+   exit 1
+fi
+
+if [ "${SERVICE_NAME}" == "**ChangeMe**" -o -z "${SERVICE_NAME}" ]; then
+   echo "*** ERROR: you need to define SERVICE_NAME environment variable - Exiting ..."
    exit 1
 fi
 
