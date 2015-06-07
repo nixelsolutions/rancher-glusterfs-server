@@ -4,15 +4,15 @@ set -e
 
 [ "$DEBUG" == "1" ] && set -x && set +e
 
-if [ "${ROOT_PASSWORD}" == "**ChangeMe**" ] || [ -z "${ROOT_PASSWORD}" ]; then
+if [ "${ROOT_PASSWORD}" == "**ChangeMe**" ] || [ "${ROOT_PASSWORD}a" == "a" ]; then
    echo "*** ERROR: you need to define ROOT_PASSWORD environment variable - Exiting ..."
    exit 1
 fi
 
 # Required variables to work
-sleep 2
-GLUSTER_PEERS=`dig +short $SERVICE_NAME`
-MY_RANCHER_IP=`ip addr | grep inet | grep 10.42 | tail -1 | awk '{print $2}' | awk -F\/ '{print $1}'`
+sleep 5
+export GLUSTER_PEERS=`dig +short $SERVICE_NAME`
+export MY_RANCHER_IP=`ip addr | grep inet | grep 10.42 | tail -1 | awk '{print $2}' | awk -F\/ '{print $1}'`
 
 # Prepare a shell to initialize docker environment variables for ssh
 echo "#!/bin/bash" > ${GLUSTER_CFG_FILE}
