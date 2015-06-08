@@ -19,7 +19,7 @@ sleep 5
 export GLUSTER_PEERS=`dig +short ${SERVICE_NAME}`
 if [ -z "${GLUSTER_PEERS}" ]; then
    echo "*** ERROR: Could not determine which containers are part of this service."
-   echo "*** Is this service named "${SERVICE_NAME}"? If not, please regenerate the service"
+   echo "*** Is this service named \"${SERVICE_NAME}\"? If not, please regenerate the service"
    echo "*** and add SERVICE_NAME environment variable which value should be equal to this service name"
    echo "*** Exiting ..."
    exit 1
