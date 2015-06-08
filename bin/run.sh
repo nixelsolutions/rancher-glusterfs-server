@@ -16,8 +16,19 @@ fi
 
 # Required stuff to work
 sleep 5
-export GLUSTER_PEERS=`dig +short $SERVICE_NAME`
+export GLUSTER_PEERS=`dig +short ${SERVICE_NAME}`
+if [ -z "${GLUSTER_PEERS}" ]; then
+   echo "*** ERROR: Could not determine which containers are part of this service."
+   echo "*** Is this service named "${SERVICE_NAME}"? If not, please regenerate the service"
+   echo "*** and add SERVICE_NAME environment variable which value should be equal to this service name"
+   echo "*** Exiting ..."
+   exit 1
+fi
 export MY_RANCHER_IP=`ip addr | grep inet | grep 10.42 | tail -1 | awk '{print $2}' | awk -F\/ '{print $1}'`
+if [ -z "${MY_RANCHER_IP}" ]; then
+   echo "*** ERROR: Could not determine this container Rancher IP - Exiting ..."
+   exit 1
+fi
 echo "root:${ROOT_PASSWORD}" | chpasswd
 
 # Prepare a shell to initialize docker environment variables for ssh

@@ -14,7 +14,7 @@ ENV SSH_OPTS -p ${SSH_PORT} -o ConnectTimeout=20 -o UserKnownHostsFile=/dev/null
 ENV GLUSTER_VOL ranchervol
 ENV GLUSTER_BRICK_PATH /gluster_volume
 ENV ROOT_PASSWORD **ChangeMe**
-ENV SERVICE_NAME **ChangeMe**
+ENV SERVICE_NAME gluster
 
 ENV DEBUG 0
 
