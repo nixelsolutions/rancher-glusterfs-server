@@ -4,16 +4,20 @@ set -e
 
 [ "$DEBUG" == "1" ] && set -x
 
+function check_if_already_joined {
+   # Check if I'm part of the cluster
+   NUMBER_OF_PEERS=`gluster peer status | grep "Number of Peers:" | awk -F: '{print $2}'`
+   if [ ${NUMBER_OF_PEERS} -ne 0 ]; then
+      # This container is already part of the cluster
+      echo "=> This container is already joined with nodes ${GLUSTER_PEERS}, skipping joining ..."
+      exit 0
+   fi
+}
+
 echo "=> Waiting for glusterd to start..."
 sleep 10
 
-# Check if I'm part of the cluster
-NUMBER_OF_PEERS=`gluster peer status | grep "Number of Peers:" | awk -F: '{print $2}'`
-if [ ${NUMBER_OF_PEERS} -ne 0 ]; then
-   # This container is already part of the cluster
-   echo "=> This container is already joined with nodes ${GLUSTER_PEERS}, skipping joining ..."
-   exit 0
-fi
+check_if_already_joined
 
 # Join the cluster - choose a suitable container
 ALIVE=0
@@ -36,6 +40,8 @@ if [ ${ALIVE} -eq 0 ]; then
    echo "Could not reach any GlusterFS container from this list: ${GLUSTER_PEERS} - Maybe I am the first node in the cluster? Well, I keep waiting for new containers to join me ..."
    exit 0
 fi
+
+check_if_already_joined
 
 echo "=> Joining cluster with container ${PEER} ..."
 sshpass -p ${ROOT_PASSWORD} ssh ${SSH_OPTS} ${SSH_USER}@${PEER} "add-gluster-peer.sh ${MY_RANCHER_IP}"
