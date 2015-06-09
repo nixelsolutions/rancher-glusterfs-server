@@ -7,12 +7,17 @@ set -e
 
 [ "$DEBUG" == "1" ] && set -x && set +e
 
+PEER=$1
+
+if [ -z "${PEER}" ]; then
+   echo "=> ERROR: I was supposed to add a new gluster peer to the cluster but no IP was specified, doing nothing ..."
+   exit 1
+fi
+
 GLUSTER_CONF_FLAG=/etc/gluster.env
-SEMAPHORE_FILE=/tmp/adding-gluster-node
+SEMAPHORE_FILE=/tmp/adding-gluster-node.${PEER}
 SEMAPHORE_TIMEOUT=120
 source ${GLUSTER_CONF_FLAG}
-
-PEER=$1
 
 function echo() {
    builtin echo $(basename $0): [From container ${MY_RANCHER_IP}] $1
@@ -24,11 +29,6 @@ function detach() {
    rm -f ${SEMAPHORE_FILE}
    exit 1
 }
-
-if [ -z "${PEER}" ]; then
-   echo "=> ERROR: I was supposed to add a new gluster peer to the cluster but no IP was specified, doing nothing ..."
-   exit 1
-fi
 
 echo "=> Checking if I can reach gluster container ${PEER} ..."
 if sshpass -p ${ROOT_PASSWORD} ssh ${SSH_OPTS} ${SSH_USER}@${PEER} "hostname" >/dev/null 2>&1; then

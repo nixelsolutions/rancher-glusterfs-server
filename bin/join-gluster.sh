@@ -41,6 +41,11 @@ if [ ${ALIVE} -eq 0 ]; then
    exit 0
 fi
 
+# If PEER has requested me to join him, just wait for a while
+SEMAPHORE_FILE=/tmp/adding-gluster-node.${PEER}
+if [ -e ${SEMAPHORE_FILE} ]; then
+   sleep 20
+fi
 check_if_already_joined
 
 echo "=> Joining cluster with container ${PEER} ..."
