@@ -8,17 +8,19 @@ RUN add-apt-repository -y ppa:gluster/glusterfs-3.5 && \
     apt-get update && \
     apt-get install -y glusterfs-server supervisor openssh-server dnsutils sshpass
 
+ENV ROOT_PASSWORD **ChangeMe**
+
 ENV SSH_PORT 2222
 ENV SSH_USER root
 ENV SSH_OPTS -p ${SSH_PORT} -o ConnectTimeout=20 -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no
 ENV GLUSTER_VOL ranchervol
 ENV GLUSTER_BRICK_PATH /gluster_volume
-ENV ROOT_PASSWORD **ChangeMe**
+ENV GLUSTER_CONF_FLAG /etc/gluster.env
 ENV SERVICE_NAME gluster
 
 ENV DEBUG 0
 
-VOLUME ["/gluster_volume"]
+VOLUME ["${GLUSTER_BRICK_PATH}"]
 
 RUN mkdir -p /var/run/sshd /root/.ssh /var/log/supervisor
 RUN perl -p -i -e "s/^Port .*/Port ${SSH_PORT}/g" /etc/ssh/sshd_config

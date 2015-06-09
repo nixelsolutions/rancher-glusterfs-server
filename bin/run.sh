@@ -29,18 +29,19 @@ if [ -z "${MY_RANCHER_IP}" ]; then
    echo "*** ERROR: Could not determine this container Rancher IP - Exiting ..."
    exit 1
 fi
+
 echo "root:${ROOT_PASSWORD}" | chpasswd
 
 # Prepare a shell to initialize docker environment variables for ssh
-echo "#!/bin/bash" > /etc/gluster.env
-echo "ROOT_PASSWORD=\"${ROOT_PASSWORD}\"" >> /etc/gluster.env
-echo "SSH_PORT=\"${SSH_PORT}\"" >> /etc/gluster.env
-echo "SSH_USER=\"${SSH_USER}\"" >> /etc/gluster.env
-echo "SSH_OPTS=\"${SSH_OPTS}\"" >> /etc/gluster.env
-echo "GLUSTER_VOL=\"${GLUSTER_VOL}\"" >> /etc/gluster.env
-echo "GLUSTER_BRICK_PATH=\"${GLUSTER_BRICK_PATH}\"" >> /etc/gluster.env
-echo "DEBUG=\"${DEBUG}\"" >> /etc/gluster.env
-echo "MY_RANCHER_IP=\"${MY_RANCHER_IP}\"" >> /etc/gluster.env
+echo "#!/bin/bash" > ${GLUSTER_CONF_FLAG}
+echo "ROOT_PASSWORD=\"${ROOT_PASSWORD}\"" >> ${GLUSTER_CONF_FLAG}
+echo "SSH_PORT=\"${SSH_PORT}\"" >> ${GLUSTER_CONF_FLAG}
+echo "SSH_USER=\"${SSH_USER}\"" >> ${GLUSTER_CONF_FLAG}
+echo "SSH_OPTS=\"${SSH_OPTS}\"" >> ${GLUSTER_CONF_FLAG}
+echo "GLUSTER_VOL=\"${GLUSTER_VOL}\"" >> ${GLUSTER_CONF_FLAG}
+echo "GLUSTER_BRICK_PATH=\"${GLUSTER_BRICK_PATH}\"" >> ${GLUSTER_CONF_FLAG}
+echo "DEBUG=\"${DEBUG}\"" >> ${GLUSTER_CONF_FLAG}
+echo "MY_RANCHER_IP=\"${MY_RANCHER_IP}\"" >> ${GLUSTER_CONF_FLAG}
 
 join-gluster.sh &
 /usr/bin/supervisord

@@ -5,9 +5,12 @@
 
 set -e
 
-[ "$DEBUG" == "1" ] && set -x && set +e
+[ "$DEBUG" == "1" ] && set -x && set +e && touch /tmp/adding-gluster-node
 
-source /etc/gluster.env
+GLUSTER_CONF_FLAG=/etc/gluster.env
+SEMAPHORE_FILE=/tmp/adding-gluster-node
+SEMAPHORE_TIMEOUT=10
+source ${GLUSTER_CONF_FLAG}
 
 PEER=$1
 
@@ -18,6 +21,7 @@ function echo() {
 function detach() {
    echo "=> Some error ocurred while trying to add peer ${PEER} to the cluster - detaching it ..."
    gluster peer detach ${PEER} force
+   rm -f ${SEMAPHORE_FILE}
    exit 1
 }
 
@@ -33,6 +37,22 @@ else
    echo "*** Could not reach gluster master container ${PEER} - exiting ..."
    exit 1
 fi
+
+# Gluster does not like to add two nodes at once
+for ((SEMAPHORE_RETRY=0; SEMAPHORE_RETRY<SEMAPHORE_TIMEOUT; SEMAPHORE_RETRY++)); do
+   if [ ! -e ${SEMAPHORE_FILE} ]; then
+      break
+   fi
+   echo "*** There is another container joining the cluster, waiting $((SEMAPHORE_TIMEOUT-SEMAPHORE_RETRY)) seconds ..."
+   sleep 1     
+done
+
+if [ -e ${SEMAPHORE_FILE} ]; then
+   echo "*** Error: another container is joining the cluster"
+   echo "and after waiting ${SEMAPHORE_TIMEOUT} seconds I could not join peer ${PEER}, giving up ..."
+   exit 1
+fi
+touch ${SEMAPHORE_FILE}
 
 # Check how many peers are already joined in the cluster - needed to add a replica
 NUMBER_OF_REPLICAS=`gluster volume info ${GLUSTER_VOL} | grep "Number of Bricks:" | awk '{print $6}'`
@@ -78,4 +98,5 @@ if ! gluster volume info ${GLUSTER_VOL} | grep ": ${PEER}:${GLUSTER_BRICK_PATH}$
    gluster volume add-brick ${GLUSTER_VOL} replica $((NUMBER_OF_REPLICAS+1)) ${PEER}:${GLUSTER_BRICK_PATH} force || detach
 fi
 
+rm -f ${SEMAPHORE_FILE}
 exit 0
