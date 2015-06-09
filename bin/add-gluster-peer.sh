@@ -5,11 +5,11 @@
 
 set -e
 
-[ "$DEBUG" == "1" ] && set -x && set +e && touch /tmp/adding-gluster-node
+[ "$DEBUG" == "1" ] && set -x && set +e
 
 GLUSTER_CONF_FLAG=/etc/gluster.env
 SEMAPHORE_FILE=/tmp/adding-gluster-node
-SEMAPHORE_TIMEOUT=10
+SEMAPHORE_TIMEOUT=120
 source ${GLUSTER_CONF_FLAG}
 
 PEER=$1
@@ -49,7 +49,7 @@ done
 
 if [ -e ${SEMAPHORE_FILE} ]; then
    echo "*** Error: another container is joining the cluster"
-   echo "and after waiting ${SEMAPHORE_TIMEOUT} seconds I could not join peer ${PEER}, giving up ..."
+   echo "and after waiting ${SEMAPHORE_TIMEOUT} seconds I could not join peer ${PEER}, giving it up ..."
    exit 1
 fi
 touch ${SEMAPHORE_FILE}
