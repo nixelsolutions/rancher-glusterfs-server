@@ -44,7 +44,7 @@ fi
 # If PEER has requested me to join him, just wait for a while
 SEMAPHORE_FILE=/tmp/adding-gluster-node.${PEER}
 if [ -e ${SEMAPHORE_FILE} ]; then
-   echo "=> Seems like peer ${PEER} has just requested me to join him to the cluster"
+   echo "=> Seems like peer ${PEER} has just requested me to join him"
    echo "=> So I'm waiting for 20 seconds to finish it..."
    sleep 20
 fi
