@@ -22,7 +22,7 @@ function echo_msg() {
 # -d DIRECTORY
 # -q QUOTA
 
-while getopts ":o:d:q" PARAMS; do
+while getopts ":o:d:q:" PARAMS; do
       case $PARAMS in
       o)
            OPERATION=`echo $OPTARG | tr '[:lower:]' '[:upper:]'`
