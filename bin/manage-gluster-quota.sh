@@ -56,7 +56,7 @@ SET)
 SHOW)
    msg=`gluster volume quota ${GLUSTER_VOL} list /${DIRECTORY}` 
    if [ $? -eq 0 ]; then
-      msg=`echo $msg | grep "^/${DIRECTORY}"`
+      msg=`echo "$msg" | grep "^/${DIRECTORY}"`
       echo_msg "SUCCESS: $msg"
       exit $EXIT_OK
    else
