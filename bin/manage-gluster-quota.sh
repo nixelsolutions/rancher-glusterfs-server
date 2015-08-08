@@ -13,8 +13,9 @@ source ${GLUSTER_CONF_FLAG}
 
 [ "$DEBUG" == "1" ] && set -x && set +e
 
-function echo_msg() {
+function exit_msg() {
    echo $(basename $0): [From container ${MY_RANCHER_IP}] $1
+   exit $2
 }
 
 # Params:
@@ -36,36 +37,34 @@ while getopts ":o:d:q:" PARAMS; do
       esac
 done
 
-[ -z "$OPERATION" ] && echo_msg "Error, operation parameter is missing (parameter -o)" && exit $EXIT_ERROR
-[ -z "$DIRECTORY" ] && echo_msg "Error, directory parameter is missing (parameter -d)" && exit $EXIT_ERROR
+[ -z "$OPERATION" ] && exit_msg "Error, operation parameter is missing (parameter -o)" $EXIT_ERROR
 
 case $OPERATION in
+SUMMARY)
+   msg=`gluster volume quota ${GLUSTER_VOL} list | grep "^/"`
+   exit_msg "$msg" $?
+   ;;
 SET)
-   [ -z "$QUOTA" ] && echo_msg "Error, quota arameter is missing (parameter -q)" && exit $EXIT_ERROR
+   [ -z "$DIRECTORY" ] && exit_msg "Error, directory parameter is missing (parameter -d)" $EXIT_ERROR
+   [ -z "$QUOTA" ] && exit_msg "Error, quota arameter is missing (parameter -q)" $EXIT_ERROR
 
    # Set quota on directory
    msg=`gluster volume quota ${GLUSTER_VOL} limit-usage /${DIRECTORY} $QUOTA`
-   if [ $? -eq 0 ]; then
-      echo "SUCCESS: $msg"
-      exit $EXIT_OK
-   else
-      echo "ERROR: $msg"
-      exit $EXIT_ERROR
-   fi
-;;
-SHOW)
-   msg=`gluster volume quota ${GLUSTER_VOL} list /${DIRECTORY}` 
-   if [ $? -eq 0 ]; then
-      msg=`echo "$msg" | grep "^/${DIRECTORY}"`
-      echo_msg "SUCCESS: $msg"
-      exit $EXIT_OK
-   else
-      echo_msg "ERROR: $msg"
-      exit $EXIT_ERROR
-   fi
-;;
+   exit_msg "$msg" $?
+   ;;
+FREE)
+   [ -z "$DIRECTORY" ] && exit_msg "Error, directory parameter is missing (parameter -d)" $EXIT_ERROR
+
+   msg=`gluster volume quota ${GLUSTER_VOL} list /${DIRECTORY} | grep "^/" | awk '{print $5}'` 
+   exit_msg "$msg" $?
+   ;;
+USED)
+   [ -z "$DIRECTORY" ] && exit_msg "Error, directory parameter is missing (parameter -d)" $EXIT_ERROR
+
+   msg=`gluster volume quota ${GLUSTER_VOL} list /${DIRECTORY} | grep "^/" | awk '{print $4}'`
+   exit_msg "$msg" $?
+   ;;
 *)
-   echo_msg "ERROR: unknown operation $OPERATION"
-   exit $EXIT_ERROR
-;;
+   exit_msg "ERROR: unknown operation $OPERATION" $EXIT_ERROR
+   ;;
 esac
