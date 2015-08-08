@@ -64,4 +64,8 @@ SHOW)
       exit $EXIT_ERROR
    fi
 ;;
+*)
+   echo "ERROR: unknown operation $OPERATION"
+   exit $EXIT_ERROR
+;;
 esac
