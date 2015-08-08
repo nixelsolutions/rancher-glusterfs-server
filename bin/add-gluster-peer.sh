@@ -42,14 +42,14 @@ fi
 
 # Gluster does not like to add two nodes at once
 for ((SEMAPHORE_RETRY=0; SEMAPHORE_RETRY<SEMAPHORE_TIMEOUT; SEMAPHORE_RETRY++)); do
-   if [ `find ${SEMAPHORE_FILE_PATH} -name "${SEMAPHORE_FILE_NAME}*" | wc -l` -eq 0 ]; then
+   if [ `find ${SEMAPHORE_FILE_DIR} -name "${SEMAPHORE_FILE_NAME}*" | wc -l` -eq 0 ]; then
       break
    fi
    echo "*** There is another container joining the cluster, waiting $((SEMAPHORE_TIMEOUT-SEMAPHORE_RETRY)) seconds ..."
    sleep 1     
 done
 
-if [ `find ${SEMAPHORE_FILE_PATH} -name "${SEMAPHORE_FILE_NAME}*" | wc -l` -gt 0 ]; then
+if [ `find ${SEMAPHORE_FILE_DIR} -name "${SEMAPHORE_FILE_NAME}*" | wc -l` -gt 0 ]; then
    echo "*** Error: another container is joining the cluster"
    echo "and after waiting ${SEMAPHORE_TIMEOUT} seconds I could not join peer ${PEER}, giving it up ..."
    exit 1
