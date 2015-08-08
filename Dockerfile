@@ -21,6 +21,7 @@ ENV SERVICE_NAME gluster
 ENV DEBUG 0
 
 VOLUME ["${GLUSTER_BRICK_PATH}"]
+VOLUME /var/lib/glusterd
 
 RUN mkdir -p /var/run/sshd /root/.ssh /var/log/supervisor /var/run/gluster
 RUN perl -p -i -e "s/^Port .*/Port ${SSH_PORT}/g" /etc/ssh/sshd_config
