@@ -16,7 +16,7 @@ fi
 
 # Required stuff to work
 sleep 5
-export GLUSTER_PEERS=`dig +short ${SERVICE_NAME}`
+export GLUSTER_PEERS=`dig +short ${SERVICE_NAME} | sort`
 if [ -z "${GLUSTER_PEERS}" ]; then
    echo "*** ERROR: Could not determine which containers are part of this service."
    echo "*** Is this service named \"${SERVICE_NAME}\"? If not, please regenerate the service"
