@@ -36,12 +36,12 @@ while getopts ":o:d:q" PARAMS; do
       esac
 done
 
-[ -z $OPERATION ] && echo "Error, operation parameter is missing (parameter -o)" && exit $EXIT_ERROR
-[ -z $DIRECTORY ] && echo "Error, directory parameter is missing (parameter -d)" && exit $EXIT_ERROR
+[ -z "$OPERATION" ] && echo "Error, operation parameter is missing (parameter -o)" && exit $EXIT_ERROR
+[ -z "$DIRECTORY" ] && echo "Error, directory parameter is missing (parameter -d)" && exit $EXIT_ERROR
 
 case $OPERATION in
 SET)
-   [ -z $QUOTA ] && echo "Error, quota arameter is missing (parameter -q)" && exit $EXIT_ERROR
+   [ -z "$QUOTA" ] && echo "Error, quota arameter is missing (parameter -q)" && exit $EXIT_ERROR
 
    # Set quota on directory
    msg=`gluster volume quota ${GLUSTER_VOL} limit-usage /${DIRECTORY} $QUOTA`
