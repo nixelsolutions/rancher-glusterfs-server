@@ -22,7 +22,7 @@ ENV DEBUG 0
 
 VOLUME ["${GLUSTER_BRICK_PATH}"]
 
-RUN mkdir -p /var/run/sshd /root/.ssh /var/log/supervisor
+RUN mkdir -p /var/run/sshd /root/.ssh /var/log/supervisor /var/run/gluster
 RUN perl -p -i -e "s/^Port .*/Port ${SSH_PORT}/g" /etc/ssh/sshd_config
 RUN perl -p -i -e "s/#?PasswordAuthentication .*/PasswordAuthentication yes/g" /etc/ssh/sshd_config
 RUN perl -p -i -e "s/#?PermitRootLogin .*/PermitRootLogin yes/g" /etc/ssh/sshd_config
