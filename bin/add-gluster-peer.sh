@@ -84,8 +84,6 @@ if ! gluster volume list | grep "^${GLUSTER_VOL}$" >/dev/null; then
    echo "=> Creating GlusterFS volume ${GLUSTER_VOL}..."
    gluster volume create ${GLUSTER_VOL} replica 2 ${MY_RANCHER_IP}:${GLUSTER_BRICK_PATH} ${PEER}:${GLUSTER_BRICK_PATH} force || detach
    sleep 1
-   # Enable quota on this volume
-   gluster volume quota ${GLUSTER_VOL} enable 
 fi
 
 # Start the volume
@@ -93,6 +91,8 @@ if ! gluster volume status ${GLUSTER_VOL} >/dev/null; then
    echo "=> Starting GlusterFS volume ${GLUSTER_VOL}..."
    gluster volume start ${GLUSTER_VOL}
    sleep 1
+   # Enable quota on this volume
+   gluster volume quota ${GLUSTER_VOL} enable 
 fi
 
 if ! gluster volume info ${GLUSTER_VOL} | grep ": ${PEER}:${GLUSTER_BRICK_PATH}$" >/dev/null; then
