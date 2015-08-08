@@ -14,7 +14,7 @@ source ${GLUSTER_CONF_FLAG}
 [ "$DEBUG" == "1" ] && set -x && set +e
 
 function echo() {
-   builtin echo $(basename $0): [From container ${MY_RANCHER_IP}]
+   builtin echo $(basename $0): [From container ${MY_RANCHER_IP}] $1
 }
 
 # Params:
