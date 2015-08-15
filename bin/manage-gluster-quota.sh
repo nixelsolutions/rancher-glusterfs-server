@@ -50,8 +50,11 @@ SET)
    [ -z "$QUOTA" ] && exit_msg "Error, quota arameter is missing (parameter -q)" $EXIT_ERROR
 
    # Set quota on directory
-   if [ ! -d ${GLUSTER_BRICK_PATH}/${DIRECTORY} ]; then
-      mkdir ${GLUSTER_BRICK_PATH}/${DIRECTORY}
+   if ! mount | grep "on /run/gluster/${GLUSTER_VOL} type"; then
+      gluster volume quota ${GLUSTER_VOL} list >dev/null 
+   fi
+   if [ ! -d /run/gluster/${GLUSTER_VOL}/${DIRECTORY} ]; then
+      mkdir /run/gluster/${GLUSTER_VOL}/${DIRECTORY}
       chown www-data:www-data ${GLUSTER_BRICK_PATH}/${DIRECTORY}
    fi
    msg=`gluster volume quota ${GLUSTER_VOL} limit-usage /${DIRECTORY} $QUOTA`
