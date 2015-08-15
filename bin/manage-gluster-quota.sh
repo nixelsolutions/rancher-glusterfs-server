@@ -50,7 +50,7 @@ SET)
    [ -z "$QUOTA" ] && exit_msg "Error, quota arameter is missing (parameter -q)" $EXIT_ERROR
 
    # Set quota on directory
-   if ! mount | grep "on /run/gluster/${GLUSTER_VOL} type"; then
+   if ! mount | grep "on /run/gluster/${GLUSTER_VOL} type" >/dev/null; then
       gluster volume quota ${GLUSTER_VOL} list >dev/null 
    fi
    if [ ! -d /run/gluster/${GLUSTER_VOL}/${DIRECTORY} ]; then
