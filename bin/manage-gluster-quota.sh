@@ -53,9 +53,9 @@ SET)
    if ! mount | grep "on /run/gluster/${GLUSTER_VOL} type"; then
       gluster volume quota ${GLUSTER_VOL} list >dev/null 
    fi
-   if [ ! -d /run/gluster/${GLUSTER_VOL}/${DIRECTORY} ]; then
+   if [ ! -d /run/gluster/${GLUSTER_VOL}/${DIRECTORY} ]; then
       mkdir /run/gluster/${GLUSTER_VOL}/${DIRECTORY}
-      chown www-data:www-data ${GLUSTER_BRICK_PATH}/${DIRECTORY}
+      chown www-data:www-data /run/gluster/${GLUSTER_VOL}/${DIRECTORY}
    fi
    msg=`gluster volume quota ${GLUSTER_VOL} limit-usage /${DIRECTORY} $QUOTA`
    exit_msg "$msg" $?
