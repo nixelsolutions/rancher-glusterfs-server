@@ -51,7 +51,7 @@ SET)
 
    # Set quota on directory
    if ! mount | grep "on /run/gluster/${GLUSTER_VOL} type" >/dev/null; then
-      gluster volume quota ${GLUSTER_VOL} list >dev/null 
+      gluster volume quota ${GLUSTER_VOL} list >/dev/null 
       sleep 5
    fi
    if [ ! -d /run/gluster/${GLUSTER_VOL}/${DIRECTORY} ]; then
