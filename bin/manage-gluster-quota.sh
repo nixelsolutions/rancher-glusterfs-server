@@ -24,13 +24,16 @@ function exit_msg() {
 # -d DIRECTORY
 # -q QUOTA
 
-while getopts ":o:d:q:" PARAMS; do
+while getopts ":o:d:s:q:" PARAMS; do
       case $PARAMS in
       o)
            OPERATION=`echo $OPTARG | tr '[:lower:]' '[:upper:]'`
            ;;
       d)
            DIRECTORY=$OPTARG
+           ;;
+      s)
+           SERVICE=$OPTARG
            ;;
       q)
            QUOTA=$OPTARG
@@ -73,6 +76,26 @@ USED)
    msg=`gluster volume quota ${GLUSTER_VOL} list /${DIRECTORY} | grep "^/" | awk '{print $4}'`
    exit_msg "$msg" $?
    ;;
+TOTAL)
+   [ -z "$DIRECTORY" ] && exit_msg "Error, directory parameter is missing (parameter -d)" $EXIT_ERROR
+
+   msg=`gluster volume quota ${GLUSTER_VOL} list /${DIRECTORY} | grep "^/" | awk '{print $2}'`
+   exit_msg "$msg" $?
+   ;;
+DELETE)
+   [ -z "$DIRECTORY" ] && exit_msg "Error, directory parameter is missing (parameter -d)" $EXIT_ERROR
+   [ -z "$SERVICE" ] && exit_msg "Error, service parameter is missing (parameter -s)" $EXIT_ERROR
+
+   if ! mount | grep "on /run/gluster/${GLUSTER_VOL} type" >/dev/null; then
+      gluster volume quota ${GLUSTER_VOL} list >/dev/null
+      sleep 5
+   fi
+   if [ ! -d /run/gluster/${GLUSTER_VOL}/${DIRECTORY} ]; then
+      exit_msg "Could not delete directory ${DIRECTORY}/${SERVICE} - Exiting..." 1
+   fi
+   msg=`rm -rf /run/gluster/${GLUSTER_VOL}/${DIRECTORY}/${SERVICE}`
+   exit_msg "$msg" $?
+  ;;
 *)
    exit_msg "ERROR: unknown operation $OPERATION" $EXIT_ERROR
    ;;
